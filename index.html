@@ -3,344 +3,55 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tlotlo Oepeng — ML Engineer (Data Science & Scientific ML)</title>
+    <title>Tlotlo Oepeng</title>
     <meta
       name="description"
-      content="Tlotlo Oepeng — Machine Learning Engineer with an MSc in Mathematical Sciences (AI) and a physics background. Builds predictive models and production-facing ML systems across computer vision, scientific ML, tabular learning, and sequence modeling."
+      content="Tlotlo Oepeng — Machine Learning Engineer (Data Science & Scientific ML)."
     />
-    <meta name="color-scheme" content="dark light" />
-
-    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/site.css" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <meta property="og:title" content="Tlotlo Oepeng — ML Engineer" />
-    <meta
-      property="og:description"
-      content="Machine Learning Engineer focused on data science, production ML, and scientific machine learning."
-    />
-    <meta property="og:type" content="website" />
-
-    <script>
-      (() => {
-        try {
-          const stored = localStorage.getItem("theme");
-          if (stored === "dark" || stored === "light") {
-            document.documentElement.dataset.theme = stored;
-          }
-        } catch {}
-      })();
-    </script>
   </head>
   <body>
-    <a class="skip-link" href="#content">Skip to content</a>
-
-    <header class="site-header">
-      <div class="container header-row">
-        <a class="brand" href="#top" aria-label="Home">
-          <span class="brand-mark" aria-hidden="true">TO</span>
-          <span class="brand-text">Tlotlo Oepeng</span>
-        </a>
-
-        <nav class="nav" aria-label="Primary">
-          <a href="#about">About</a>
-          <a href="#skills">Skills</a>
-          <a href="#experience">Experience</a>
-          <a href="#projects">Projects</a>
-          <a href="tutorials/index.html">Tutorials</a>
-          <a href="#education">Education</a>
-          <a href="#contact">Contact</a>
+    <div class="container">
+      <header class="nav" role="banner">
+        <div><a href="/">Home</a></div>
+        <nav class="nav__links" aria-label="Primary">
+          <a href="/blog/">Blog</a>
+          <a href="assets/Tlotlo_Oepeng_Resume.pdf" target="_blank" rel="noreferrer">CV</a>
         </nav>
+      </header>
 
-        <div class="header-actions">
-          <button class="theme-toggle" type="button" aria-label="Toggle theme" data-theme-toggle>
-            <span class="theme-toggle__icon" aria-hidden="true"></span>
-            <span class="theme-toggle__text">Theme</span>
-          </button>
-          <a class="button button--primary" href="mailto:03peng@gmail.com">Email</a>
-        </div>
-      </div>
-    </header>
+      <main role="main">
+        <h1>Tlotlo Oepeng</h1>
+        <p class="subtitle">Machine Learning Engineer (Data Science &amp; Scientific ML)</p>
 
-    <main id="content">
-      <section class="hero" id="top">
-        <div class="container hero-grid">
-          <div class="hero-copy">
-            <p class="eyebrow">Machine Learning Engineer</p>
-            <h1>Data Science &amp; Scientific ML</h1>
-            <p class="lead">
-              Machine learning engineer with an MSc in Mathematical Sciences (AI) and a physics background, building
-              predictive models and production-facing ML systems for engineering and research environments.
-            </p>
-
-            <div class="cta-row">
-              <a class="button button--primary" href="#projects">See projects</a>
-              <a class="button button--ghost" href="tutorials/index.html">Read tutorials</a>
-              <a class="button button--ghost" href="assets/Tlotlo_Oepeng_Resume.pdf" target="_blank" rel="noreferrer">
-                Download CV (PDF)
-              </a>
-            </div>
-
-            <ul class="meta-row" aria-label="Contact links">
-              <li><a href="https://www.linkedin.com/in/Oepeng" target="_blank" rel="noreferrer">LinkedIn</a></li>
-              <li><a href="https://github.com/Soot-bit" target="_blank" rel="noreferrer">GitHub</a></li>
-              <li><span class="meta-muted">Botswana</span></li>
-              <li><a href="tel:+26773221763" class="meta-muted">+267&nbsp;73221763</a></li>
-            </ul>
-          </div>
-
-          <div class="hero-card" role="region" aria-label="Focus areas">
-            <h2 class="card-title">What I do</h2>
-            <ul class="chips" aria-label="Focus areas">
-              <li class="chip">Production ML</li>
-              <li class="chip">Tabular prediction</li>
-              <li class="chip">Computer vision</li>
-              <li class="chip">Scientific ML</li>
-              <li class="chip">Sequence modeling</li>
-              <li class="chip">Anomaly detection</li>
-              <li class="chip">Recommender systems</li>
-              <li class="chip">Experiment design</li>
-              <li class="chip">FastAPI model serving</li>
-            </ul>
-
-            <div class="card-kpis" aria-label="Quick highlights">
-              <div class="kpi">
-                <div class="kpi__value">MSc AI</div>
-                <div class="kpi__label">UCT, 2023–2024</div>
-              </div>
-              <div class="kpi">
-                <div class="kpi__value">De Beers</div>
-                <div class="kpi__label">CV systems, 2026–</div>
-              </div>
-              <div class="kpi">
-                <div class="kpi__value">C++ + PyBind</div>
-                <div class="kpi__label">HPC-backed ML</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="about">
-        <div class="container">
-          <h2>About</h2>
-          <div class="prose">
-            <p>
-              I build end-to-end ML solutions: from framing the problem, designing experiments, and training models, to
-              packaging inference into dependable, production-facing systems. My work spans computer vision, scientific
-              machine learning, tabular prediction, transformers/sequence modeling, anomaly detection, and recommender
-              systems.
-            </p>
-            <p>
-              I’m particularly effective at turning technically complex problems into robust experiments, deployable
-              pipelines, and clearly communicated results for interdisciplinary teams.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="skills">
-        <div class="container">
-          <h2>Core skills</h2>
-          <div class="grid grid--3">
-            <div class="panel">
-              <h3>Programming</h3>
-              <p class="muted">Python, C/C++, Bash, SQL, JavaScript</p>
-            </div>
-            <div class="panel">
-              <h3>ML stack</h3>
-              <p class="muted">
-                PyTorch, TensorFlow, JAX, scikit-learn, NumPy, SciPy, Pandas, Matplotlib, Jupyter, LangChain
-              </p>
-            </div>
-            <div class="panel">
-              <h3>ML engineering</h3>
-              <p class="muted">FastAPI, Docker, APIs, Git, model serving, modular data pipelines, modular code design</p>
-            </div>
-            <div class="panel">
-              <h3>Modeling</h3>
-              <p class="muted">
-                Tabular learning, transformers, sequence modeling, anomaly detection, recommender systems, GNNs, RL,
-                Markov models, scientific ML
-              </p>
-            </div>
-            <div class="panel">
-              <h3>Performance computing</h3>
-              <p class="muted">OpenMP, Geant4, Monte Carlo simulation, custom C++ data structures, Linux workflows</p>
-            </div>
-            <div class="panel">
-              <h3>Communication</h3>
-              <p class="muted">Interdisciplinary collaboration, mentoring, technical presentations (English)</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="experience">
-        <div class="container">
-          <h2>Experience</h2>
-
-          <article class="timeline-item">
-            <div class="timeline-item__header">
-              <h3>ML Engineer — De Beers Group</h3>
-              <p class="muted">Jan 2026 – Present · Hybrid, UK remote</p>
-            </div>
-            <ul>
-              <li>Develop computer-vision models for De Beers’ diamond detection machine, emphasizing robust training, evaluation, and deployment-oriented implementation.</li>
-              <li>Contribute to R&amp;D on model quality, experimental design, and production-facing algorithm integration for an engineering detection system.</li>
-            </ul>
-          </article>
-
-          <article class="timeline-item">
-            <div class="timeline-item__header">
-              <h3>Research Collaboration — Florida State University</h3>
-              <p class="muted">Current · With Prof. Harrison Prosper</p>
-            </div>
-            <ul>
-              <li>Develop research code for physics-informed neural networks applied to cosmology.</li>
-              <li>Work at the intersection of scientific ML, physical modeling, and inference with focus on numerical reliability and reproducible experimentation.</li>
-            </ul>
-          </article>
-
-          <article class="timeline-item">
-            <div class="timeline-item__header">
-              <h3>Academic Support (Machine Learning) — African Institute for Mathematical Sciences</h3>
-              <p class="muted">Aug 2024 – Feb 2025 · South Africa</p>
-            </div>
-            <ul>
-              <li>Reviewed and debugged scientific Python and ML code for graduate coursework and projects (NumPy, Pandas, PyTorch).</li>
-              <li>Mentored learners on evaluation, optimization, numerical reasoning, and reproducible computational practice.</li>
-            </ul>
-          </article>
-
-          <article class="timeline-item">
-            <div class="timeline-item__header">
-              <h3>IT Technician — Olasef Printing Service</h3>
-              <p class="muted">Oct 2019 – Feb 2021 · Botswana</p>
-            </div>
-            <ul>
-              <li>Automated recurring service tasks and resolved hardware and software issues across daily operations.</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="projects">
-        <div class="container">
-          <h2>Selected projects</h2>
-          <div class="grid grid--3">
-            <article class="card">
-              <div class="card__body">
-                <h3>GemAI</h3>
-                <p class="muted">FastAPI, Docker, PyTorch, Pandas, Pydantic</p>
-                <ul>
-                  <li>TabNet-based predictive modeling for diamond price estimation with feature-driven experimentation.</li>
-                  <li>FastAPI + Docker serving stack for deployable inference via an API-backed application.</li>
-                </ul>
-              </div>
-              <div class="card__footer">
-                <a href="https://github.com/soot-bit/GemAI.git" target="_blank" rel="noreferrer">GitHub</a>
-              </div>
-            </article>
-
-            <article class="card">
-              <div class="card__body">
-                <h3>Movie Recommender</h3>
-                <p class="muted">C++, OpenMP, PyBind, NumPy, Pandas</p>
-                <ul>
-                  <li>Collaborative filtering on a 25M-rating dataset with a C++ backend exposed to Python for large-scale evaluation.</li>
-                  <li>Custom O(1) indexing + OpenMP parallelism, cutting training/inference time by &gt;50× and achieving RMSE &lt; 0.5.</li>
-                </ul>
-              </div>
-              <div class="card__footer">
-                <a href="https://github.com/soot-bit/MovieRecommender.git" target="_blank" rel="noreferrer">GitHub</a>
-              </div>
-            </article>
-
-            <article class="card">
-              <div class="card__body">
-                <h3>TrackFormer</h3>
-                <p class="muted">PyTorch Lightning, transformers, Geant4, scientific Python</p>
-                <ul>
-                  <li>Transformer-inspired model for particle-track reconstruction (CERN context) using attention-based sequence modeling.</li>
-                  <li>Geant4 dataset simulation and anomaly-sensitive evaluation on noisy detector data.</li>
-                </ul>
-              </div>
-              <div class="card__footer">
-                <a href="https://github.com/soot-bit/TrackFormer.git" target="_blank" rel="noreferrer">GitHub</a>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="education">
-        <div class="container">
-          <h2>Education</h2>
-          <div class="grid grid--2">
-            <div class="panel">
-              <h3>MSc Mathematical Sciences (AI) — University of Cape Town</h3>
-              <p class="muted">2023 – 2024</p>
-              <p class="muted">Dissertation with Distinction · Google DeepMind Scholar</p>
-            </div>
-            <div class="panel">
-              <h3>BSc Physics — University of Botswana</h3>
-              <p class="muted">2015 – 2019</p>
-              <p class="muted">Dean’s Prize (highest graduating student in the Faculty of Science)</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="container">
-          <h2>Contact</h2>
-          <div class="grid grid--2">
-            <div class="panel">
-              <h3>Reach out</h3>
-              <p class="muted">
-                Email is best for roles in ML engineering / data science, scientific ML collaborations, or production ML projects.
-              </p>
-              <div class="cta-row">
-                <a class="button button--primary" href="mailto:03peng@gmail.com">03peng@gmail.com</a>
-                <a class="button button--ghost" href="https://www.linkedin.com/in/Oepeng" target="_blank" rel="noreferrer">
-                  LinkedIn
-                </a>
-              </div>
-            </div>
-            <div class="panel">
-              <h3>Additional</h3>
-              <ul class="muted">
-                <li>Open-source contributions: anomaly-detection benchmarking (HEP) and build improvements to PyTorch.</li>
-                <li>Published in Physics Letters A (details available on request).</li>
-                <li>Available for international collaboration and travel.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container footer-row">
-        <p class="muted">© <span id="year"></span> Tlotlo Oepeng</p>
-        <p class="muted">
-          Built for GitHub Pages · <a href="https://github.com/Soot-bit" target="_blank" rel="noreferrer">github.com/Soot-bit</a>
+        <p>
+          I build predictive models and production-facing ML systems for engineering and research environments.
+          Interests: tabular prediction, computer vision, scientific machine learning, and sequence modeling.
         </p>
-      </div>
-    </footer>
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Tlotlo Oepeng",
-        "jobTitle": "Machine Learning Engineer",
-        "address": { "@type": "PostalAddress", "addressCountry": "Botswana" },
-        "email": "mailto:03peng@gmail.com",
-        "telephone": "+26773221763",
-        "url": "https://github.com/Soot-bit",
-        "sameAs": ["https://www.linkedin.com/in/Oepeng", "https://github.com/Soot-bit"]
-      }
-    </script>
-    <script src="assets/js/main.js"></script>
+        <div class="section">
+          <h2>Links</h2>
+          <ul class="list">
+            <li><a href="https://github.com/Soot-bit" target="_blank" rel="noreferrer">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/Oepeng" target="_blank" rel="noreferrer">LinkedIn</a></li>
+            <li><a href="mailto:03peng@gmail.com">03peng@gmail.com</a></li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>Selected work</h2>
+          <ul class="list">
+            <li><a href="https://github.com/soot-bit/GemAI.git" target="_blank" rel="noreferrer">GemAI</a> — TabNet price prediction + FastAPI/Docker inference API.</li>
+            <li><a href="https://github.com/soot-bit/MovieRecommender.git" target="_blank" rel="noreferrer">Movie Recommender</a> — C++/OpenMP + PyBind backend for large-scale CF evaluation.</li>
+            <li><a href="https://github.com/soot-bit/TrackFormer.git" target="_blank" rel="noreferrer">TrackFormer</a> — transformer-style sequence modeling for particle-track reconstruction.</li>
+          </ul>
+        </div>
+
+        <p class="footer">
+          Botswana · <a href="tel:+26773221763">+267 73221763</a>
+        </p>
+      </main>
+    </div>
   </body>
 </html>

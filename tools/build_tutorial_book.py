@@ -12,7 +12,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BOOK_DIR = REPO_ROOT / "book"
 BOOK_BUILD_DIR = BOOK_DIR / "_build" / "html"
-TUTORIALS_SITE_DIR = REPO_ROOT / "tutorials"
+BLOG_SITE_DIR = REPO_ROOT / "blog"
+TUTORIALS_REDIRECT_DIR = REPO_ROOT / "tutorials"
 
 
 @dataclass(frozen=True)
@@ -68,7 +69,7 @@ def _write_book_files(entries: list[NotebookEntry], repo_url: str) -> None:
   (BOOK_DIR / "_config.yml").write_text(
     "\n".join(
       [
-        "title: Tutorials",
+        "title: Blog",
         "author: Tlotlo Oepeng",
         f"repository:\n  url: {repo_url}\n  branch: main",
         "execute:",
@@ -101,9 +102,9 @@ def _write_book_files(entries: list[NotebookEntry], repo_url: str) -> None:
   (BOOK_DIR / "index.md").write_text(
     "\n".join(
       [
-        "# Tutorials",
+        "# Blog",
         "",
-        "Notebook-style tutorials on machine learning and data science.",
+        "Notebook-style posts on machine learning and data science.",
         "",
         f"- Source repo: {repo_url}",
         "- Main site: https://soot-bit.github.io/",
@@ -129,12 +130,31 @@ def _deploy_build_to_site() -> None:
   if not BOOK_BUILD_DIR.exists():
     raise RuntimeError(f"Expected build output at {BOOK_BUILD_DIR}")
 
-  if TUTORIALS_SITE_DIR.exists():
-    shutil.rmtree(TUTORIALS_SITE_DIR)
-  shutil.copytree(BOOK_BUILD_DIR, TUTORIALS_SITE_DIR)
+  if BLOG_SITE_DIR.exists():
+    shutil.rmtree(BLOG_SITE_DIR)
+  shutil.copytree(BOOK_BUILD_DIR, BLOG_SITE_DIR)
 
   # GitHub Pages: avoid Jekyll processing.
   (REPO_ROOT / ".nojekyll").write_text("", encoding="utf-8")
+
+  # Back-compat: /tutorials/ redirects to /blog/
+  if TUTORIALS_REDIRECT_DIR.exists():
+    shutil.rmtree(TUTORIALS_REDIRECT_DIR, ignore_errors=True)
+  TUTORIALS_REDIRECT_DIR.mkdir(parents=True, exist_ok=True)
+  (TUTORIALS_REDIRECT_DIR / "index.html").write_text(
+    "\n".join(
+      [
+        "<!doctype html>",
+        '<meta charset="utf-8" />',
+        '<meta http-equiv="refresh" content="0; url=/blog/" />',
+        '<link rel="canonical" href="/blog/" />',
+        "<title>Redirecting…</title>",
+        "<p>Redirecting to <a href=\"/blog/\">/blog/</a>…</p>",
+        "",
+      ]
+    ),
+    encoding="utf-8",
+  )
 
 
 def main() -> int:
@@ -155,6 +175,8 @@ def main() -> int:
           child.unlink()
     if (REPO_ROOT / "_build").exists():
       shutil.rmtree(REPO_ROOT / "_build", ignore_errors=True)
+    if BLOG_SITE_DIR.exists():
+      shutil.rmtree(BLOG_SITE_DIR, ignore_errors=True)
 
     src = _clone_tutorials(args.repo, tmp)
     entries = _discover_notebooks(src)

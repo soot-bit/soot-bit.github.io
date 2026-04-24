@@ -3,7 +3,7 @@
 This repository hosts my GitHub Pages website (CV + tutorial notebooks).
 
 - Live site: https://soot-bit.github.io
-- Tutorial sources: https://github.com/soot-bit/Tutorials
+- Blog sources: https://github.com/soot-bit/Tutorials
 
 ## Local preview
 
@@ -11,9 +11,9 @@ This repository hosts my GitHub Pages website (CV + tutorial notebooks).
 uv run python -m http.server 8000
 ```
 
-## Rebuild tutorials (Jupyter Book)
+## Rebuild blog (Jupyter Book)
 
-This repo publishes tutorial notebooks as a Jupyter Book under `tutorials/`, sourced from:
+This repo publishes notebook posts as a Jupyter Book under `blog/`, sourced from:
 https://github.com/soot-bit/Tutorials
 
 ```bash
