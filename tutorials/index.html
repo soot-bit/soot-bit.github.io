@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tutorials — Tlotlo Oepeng</title>
+    <meta name="description" content="Tutorial notebooks on ML and data science by Tlotlo Oepeng." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-row">
+        <a class="brand" href="../index.html" aria-label="Home">
+          <span class="brand-mark" aria-hidden="true">TO</span>
+          <span class="brand-text">Tlotlo Oepeng</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="../index.html#projects">Projects</a>
+          <a href="./index.html" aria-current="page">Tutorials</a>
+          <a href="../index.html#contact">Contact</a>
+        </nav>
+
+        <div class="header-actions">
+          <a class="button button--primary" href="mailto:03peng@gmail.com">Email</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="content">
+      <section class="section">
+        <div class="container">
+          <h2>Tutorials</h2>
+          <p class="muted">Notebook-style writeups on ML and data science.</p>
+          <div class="grid grid--3" style="margin-top: 1rem">
+            <article class="card">
+              <div class="card__body">
+                <h3>Tutorial</h3>
+                <p class="muted">Exported Jupyter notebook.</p>
+              </div>
+              <div class="card__footer">
+                <a href="./cnns.html">Read</a>
+                <a href="https://github.com/soot-bit/Tutorials" target="_blank" rel="noreferrer">Source</a>
+              </div>
+            </article>
+            <article class="card">
+              <div class="card__body">
+                <h3>Tutorial</h3>
+                <p class="muted">Exported Jupyter notebook.</p>
+              </div>
+              <div class="card__footer">
+                <a href="./linear-regression.html">Read</a>
+                <a href="https://github.com/soot-bit/Tutorials" target="_blank" rel="noreferrer">Source</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-row">
+        <p class="muted">© <span id="year"></span> Tlotlo Oepeng</p>
+        <p class="muted">
+          <a href="../index.html">Home</a> ·
+          <a href="https://github.com/soot-bit" target="_blank" rel="noreferrer">GitHub</a>
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+    </script>
+  </body>
+</html>

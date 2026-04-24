@@ -1,0 +1,326 @@
+:root {
+  --cv-bg: #0b1220;
+  --cv-elev: rgba(255, 255, 255, 0.06);
+  --cv-border: rgba(233, 238, 245, 0.12);
+  --cv-text: #e9eef5;
+  --cv-muted: #b6c2cf;
+  --cv-accent: #7cf6ff;
+  --cv-accent-2: #00c2d1;
+  --cv-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Toggle buttons */
+.cvsite-iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--cv-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cv-muted);
+  cursor: pointer;
+}
+
+.cvsite-iconbtn:hover,
+.cvsite-iconbtn:focus-visible {
+  outline: none;
+  color: var(--cv-text);
+  box-shadow: 0 0 0 3px rgba(124, 246, 255, 0.25);
+}
+
+.cvsite-iconbtn__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Top bar */
+.cvsite-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  background: rgba(11, 18, 32, 0.7);
+  border-bottom: 1px solid var(--cv-border);
+}
+
+.cvsite-topbar__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cvsite-topbar a {
+  color: var(--cv-muted);
+  text-decoration: none;
+}
+
+.cvsite-topbar a:hover {
+  color: var(--cv-text);
+  text-decoration: underline;
+  text-decoration-color: var(--cv-accent);
+  text-underline-offset: 3px;
+}
+
+.cvsite-topbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--cv-text);
+}
+
+.cvsite-topbar__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--cv-accent), var(--cv-accent-2));
+  color: #081018;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.cvsite-topbar__name {
+  color: var(--cv-text);
+  font-weight: 750;
+  letter-spacing: 0.2px;
+}
+
+.cvsite-topbar__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.cvsite-topbar__sep {
+  color: var(--cv-border);
+}
+
+.cvsite-topbar__title {
+  color: var(--cv-muted);
+  max-width: min(56ch, 48vw);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Notebook layout */
+.cvsite-notebook {
+  background: radial-gradient(900px 560px at 12% 6%, rgba(124, 246, 255, 0.12), transparent 55%),
+    radial-gradient(820px 520px at 95% 18%, rgba(0, 194, 209, 0.1), transparent 60%),
+    radial-gradient(820px 520px at 65% 95%, rgba(124, 246, 255, 0.08), transparent 65%), var(--cv-bg);
+}
+
+.cvsite-layout {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 260px;
+  gap: 1rem;
+  padding: 1rem 1rem 3rem;
+  position: relative;
+}
+
+.cvsite-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  z-index: 900;
+}
+
+html.cvsite-sidebar-open .cvsite-overlay,
+html.cvsite-toc-open .cvsite-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cvsite-main {
+  min-width: 0;
+}
+
+/* Keep the notebook card readable against the background */
+.jp-Notebook .jp-NotebookPanel-notebook,
+.jp-Notebook .jp-Cell {
+  border-radius: 16px;
+}
+
+.cvsite-sidebar,
+.cvsite-toc {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+  border-radius: 16px;
+  border: 1px solid var(--cv-border);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: var(--cv-shadow);
+  overflow: hidden;
+}
+
+.cvsite-sidebar__header,
+.cvsite-toc__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--cv-border);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.cvsite-sidebar__title,
+.cvsite-toc__title {
+  font-weight: 750;
+}
+
+.cvsite-sidebar__nav,
+.cvsite-toc__nav {
+  padding: 0.65rem;
+  display: grid;
+  gap: 0.35rem;
+  max-height: calc(100vh - 150px);
+  overflow: auto;
+}
+
+.cvsite-sidelink {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  color: var(--cv-muted);
+  text-decoration: none;
+}
+
+.cvsite-sidelink:hover,
+.cvsite-sidelink:focus-visible {
+  outline: none;
+  color: var(--cv-text);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(124, 246, 255, 0.18);
+}
+
+.cvsite-sidelink.is-active {
+  color: var(--cv-text);
+  background: rgba(124, 246, 255, 0.08);
+  border-color: rgba(124, 246, 255, 0.22);
+}
+
+.toc-item {
+  display: block;
+  color: var(--cv-muted);
+  text-decoration: none;
+  padding: 0.35rem 0.4rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+
+.toc-item:hover,
+.toc-item:focus-visible {
+  outline: none;
+  color: var(--cv-text);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(124, 246, 255, 0.18);
+}
+
+.toc-item--h1 {
+  font-weight: 700;
+}
+
+.toc-item--h2 {
+  padding-left: 0.85rem;
+}
+
+.toc-item--h3 {
+  padding-left: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.cvsite-prevnext {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.cvsite-prevnext__link {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 16px;
+  border: 1px solid var(--cv-border);
+  background: rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+  color: var(--cv-text);
+}
+
+.cvsite-prevnext__link:hover,
+.cvsite-prevnext__link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 246, 255, 0.25);
+}
+
+.cvsite-prevnext__k {
+  color: var(--cv-muted);
+  font-size: 0.9rem;
+}
+
+.cvsite-prevnext__t {
+  font-weight: 720;
+}
+
+.cvsite-prevnext__link--next {
+  text-align: right;
+}
+
+.cvsite-prevnext__spacer {
+  border-radius: 16px;
+  border: 1px dashed rgba(233, 238, 245, 0.14);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (max-width: 700px) {
+  .cvsite-topbar__name {
+    display: none;
+  }
+  .cvsite-topbar__title {
+    max-width: 44vw;
+  }
+
+  .cvsite-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cvsite-sidebar,
+  .cvsite-toc {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    max-width: 88vw;
+    width: 320px;
+    z-index: 950;
+    transform: translateX(-110%);
+    transition: transform 180ms ease;
+  }
+
+  .cvsite-toc {
+    right: 0;
+    left: auto;
+    transform: translateX(110%);
+  }
+
+  html.cvsite-sidebar-open .cvsite-sidebar {
+    transform: translateX(0);
+  }
+
+  html.cvsite-toc-open .cvsite-toc {
+    transform: translateX(0);
+  }
+}
