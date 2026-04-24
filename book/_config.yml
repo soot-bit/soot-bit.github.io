@@ -1,0 +1,13 @@
+title: Tutorials
+author: Tlotlo Oepeng
+repository:
+  url: https://github.com/soot-bit/Tutorials
+  branch: main
+execute:
+  execute_notebooks: off
+html:
+  use_repository_button: true
+  use_issues_button: false
+  home_page_in_navbar: true
+launch_buttons:
+  colab_url: https://colab.research.google.com

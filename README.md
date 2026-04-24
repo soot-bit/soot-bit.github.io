@@ -11,3 +11,11 @@ This repository hosts my GitHub Pages website (CV + tutorial notebooks).
 uv run python -m http.server 8000
 ```
 
+## Rebuild tutorials (Jupyter Book)
+
+This repo publishes tutorial notebooks as a Jupyter Book under `tutorials/`, sourced from:
+https://github.com/soot-bit/Tutorials
+
+```bash
+uv run --with "jupyter-book==0.15.1" python tools/build_tutorial_book.py
+```
