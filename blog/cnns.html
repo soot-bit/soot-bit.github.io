@@ -376,7 +376,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-cnn-on-cifar-10-with-texttt-pytorch">Train CNN on CIFAR-10 with <strong><span class="math notranslate nohighlight">\(\texttt{PyTorch}\)</span></strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lets-practise-object-dectection"><strong>Lets practise, object dectection</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#object-dectection"><strong>Object dectection</strong></a></li>
 </ul>
             </nav>
         </div>
@@ -451,75 +451,91 @@ $<span class="math notranslate nohighlight">\((f * g)[1] = f[0]g[1] + f[1]g[0] +
 <p>We slide the <strong>kernel/filter/feature dectector</strong> over the image one pixel at a time (stride = 1). At each position, overlapping values are multiplied element‑wise and summed to produce a single output value. The output ( <strong>‘Convolved Feature/{Activation,Feature} Map</strong>) is size M - N + 1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title 2d convolution</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>#@title 2d convolution
 
 
 
 
+## Download image /uncomment
+!wget &quot;https://img.freepik.com/free-photo/pug-dog-isolated-white-background_2829-11416.jpg&quot; -O &quot;dog.jpg&quot;
 
-<span class="c1">## Download image /uncomment</span>
-<span class="c1"># !wget &quot;https://img.freepik.com/free-photo/pug-dog-isolated-white-background_2829-11416.jpg&quot; -O &quot;dog.jpg&quot;</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-
-<span class="n">dog_img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;dog.jpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;L&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span><span class="mi">300</span><span class="p">))</span>
-<span class="n">dog_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dog_img</span><span class="p">)</span>
-
-<span class="c1">#show F</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">view</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input Image: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">view</span><span class="p">(</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="n">dog_img</span><span class="p">)</span>
-
-<span class="n">kernels</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;edge_detection&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]),</span>
-    <span class="s2">&quot;sharpen&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                         <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
-
-    <span class="s2">&quot;blur&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span> <span class="o">/</span> <span class="mi">25</span><span class="p">,</span>
-
-    <span class="s2">&quot;identity&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                          <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                          <span class="p">[</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
-<span class="p">}</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">conv2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
-    <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">kh</span><span class="p">,</span> <span class="n">kw</span> <span class="o">=</span> <span class="n">kernel</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">_output</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">kh</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">_output</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">w</span> <span class="o">-</span> <span class="n">kw</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span><span class="n">j</span> <span class="o">+</span> <span class="n">kw</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-            <span class="n">_output</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">_output</span><span class="p">)</span>
+from PIL import Image
+import matplotlib.pyplot as plt
+import numpy as np
 
 
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">kernel</span> <span class="ow">in</span> <span class="n">kernels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">dog_array</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+dog_img = Image.open(&quot;dog.jpg&quot;).convert(&quot;L&quot;).resize((300,300))
+dog_array = np.array(dog_img)
 
-    <span class="c1">#convert back to image</span>
-    <span class="n">output_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">output</span> <span class="o">-</span> <span class="n">output</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">output</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">*</span> <span class="mi">255</span>
-    <span class="n">output_uint8</span> <span class="o">=</span> <span class="n">output_norm</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+#show F
+def view(name, img):
+    plt.title(f&quot;Input Image: {name}&quot;)
+    plt.imshow(img)
+    plt.axis(&quot;off&quot;)
+    plt.show()
 
-    <span class="c1"># Convert to image</span>
-    <span class="n">output_img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">output_uint8</span><span class="p">)</span>
-    <span class="n">view</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">output_img</span><span class="p">)</span>
+view(&quot;F&quot;, dog_img)
+
+kernels = {
+    &quot;edge_detection&quot;: np.array([[-1, -1, -1],
+                                [-1, 8, -1],
+                                [-1, -1, -1]]),
+    &quot;sharpen&quot;: np.array([[0, -1, 0],
+                         [-1, 5, -1],
+                         [0, -1, 0]]),
+
+    &quot;blur&quot;: np.ones((5,5)) / 25,
+
+    &quot;identity&quot;: np.array([[1, 0, 0],
+                          [0, 1, 0],
+                          [0 , 0, 1]])
+}
+
+def conv2d(image, kernel):
+    h, w = image.shape
+    kh, kw = kernel.shape
+    _output = []
+
+    for i in range(h - kh + 1):
+        _output.append([])
+        for j in range(w - kw + 1):
+            res = (image[i, j:j + kw] * kernel).sum()
+            _output[i].append(res)
+    return np.array(_output)
+
+
+for name, kernel in kernels.items():
+    output = conv2d(dog_array, kernel)
+
+    #convert back to image
+    output_norm = (output - output.min()) / (output.max() - output.min()) * 255
+    output_uint8 = output_norm.astype(np.uint8)
+
+    # Convert to image
+    output_img = Image.fromarray(output_uint8)
+    view(name, output_img)
 
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2026-05-12 15:36:32--  https://img.freepik.com/free-photo/pug-dog-isolated-white-background_2829-11416.jpg
+Resolving img.freepik.com (img.freepik.com)... 104.96.163.83, 104.96.163.78, 2600:1409:9800:17::1701:ffca, ...
+Connecting to img.freepik.com (img.freepik.com)|104.96.163.83|:443... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://img.magnific.com/free-photo/pug-dog-isolated-white-background_2829-11416.jpg [following]
+--2026-05-12 15:36:33--  https://img.magnific.com/free-photo/pug-dog-isolated-white-background_2829-11416.jpg
+Resolving img.magnific.com (img.magnific.com)... 104.96.163.88, 104.96.163.87, 2600:1409:9800:17::1701:ffce, ...
+Connecting to img.magnific.com (img.magnific.com)|104.96.163.88|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 49316 (48K) [image/jpeg]
+Saving to: ‘dog.jpg’
+
+dog.jpg             100%[===================&gt;]  48.16K   209KB/s    in 0.2s    
+
+2026-05-12 15:36:34 (209 KB/s) - ‘dog.jpg’ saved [49316/49316]
+</pre></div>
+</div>
 <img alt="_images/ad3a235367d41e8691ece509f52c0e39cce6f316451e241527017fb7ec2f05a1.png" src="_images/ad3a235367d41e8691ece509f52c0e39cce6f316451e241527017fb7ec2f05a1.png" />
 <img alt="_images/b87a7b476ff624f10175d8bd7143774038348a9a057736f01100e3c973975b39.png" src="_images/b87a7b476ff624f10175d8bd7143774038348a9a057736f01100e3c973975b39.png" />
 <img alt="_images/d6fad9db725b2e6427987e0c0779c6816d8fae78a827e98e04a87eab4dc6064d.png" src="_images/d6fad9db725b2e6427987e0c0779c6816d8fae78a827e98e04a87eab4dc6064d.png" />
@@ -644,7 +660,7 @@ C_{out} &amp;= N_f
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 170M/170M [05:33&lt;00:00, 511kB/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 170M/170M [00:04&lt;00:00, 38.0MB/s]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CIFAR-10 dataset loaded and DataLoaders created successfully.
@@ -702,18 +718,18 @@ Number of test samples: 10000
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CNN model architecture defined successfully.
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#@title **train**</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="c1"># Detect if GPU is available, otherwise use CPU</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 <span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Define the number of training epochs</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">CNN</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">CNN</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="c1"># Move model to the selected device</span>
 <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 
@@ -721,7 +737,7 @@ Number of test samples: 10000
     <span class="n">running_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">trainloader</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
         <span class="c1"># Get the inputs; data is a list of [inputs, labels]</span>
-        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="c1"># Move inputs and labels to the selected device</span>
 
         <span class="c1"># Zero the parameter gradients</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
@@ -745,87 +761,37 @@ Number of test samples: 10000
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">/tmp/ipython-input-279229405.py</span> in <span class="ni">&lt;cell line: 0&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span> 
-<span class="g g-Whitespace">     </span><span class="mi">17</span>         <span class="c1"># Forward pass</span>
-<span class="ne">---&gt; </span><span class="mi">18</span>         <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span>         <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span> 
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py</span> in <span class="ni">_wrapped_call_impl</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1773</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled_call_impl</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[misc]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1774</span>         <span class="k">else</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1775</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_impl</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1776</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1777</span>     <span class="c1"># torchrec tests the code consistency with the following code</span>
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1784</span>                 <span class="ow">or</span> <span class="n">_global_backward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
-<span class="g g-Whitespace">   </span><span class="mi">1785</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1786</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1787</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1788</span>         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="nn">/tmp/ipython-input-469302332.py</span> in <span class="ni">forward</span><span class="nt">(self, x)</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span>     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">27</span>         <span class="c1"># -&gt; conv1 -&gt; relu -&gt; pool</span>
-<span class="ne">---&gt; </span><span class="mi">28</span>         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span>         <span class="c1"># -&gt; conv2 -&gt; relu -&gt; pool</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span>         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py</span> in <span class="ni">_wrapped_call_impl</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1773</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled_call_impl</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[misc]</span>
-<span class="g g-Whitespace">   </span><span class="mi">1774</span>         <span class="k">else</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1775</span>             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_impl</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1776</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1777</span>     <span class="c1"># torchrec tests the code consistency with the following code</span>
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py</span> in <span class="ni">_call_impl</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1784</span>                 <span class="ow">or</span> <span class="n">_global_backward_pre_hooks</span> <span class="ow">or</span> <span class="n">_global_backward_hooks</span>
-<span class="g g-Whitespace">   </span><span class="mi">1785</span>                 <span class="ow">or</span> <span class="n">_global_forward_hooks</span> <span class="ow">or</span> <span class="n">_global_forward_pre_hooks</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">1786</span>             <span class="k">return</span> <span class="n">forward_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1787</span> 
-<span class="g g-Whitespace">   </span><span class="mi">1788</span>         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/nn/modules/pooling.py</span> in <span class="ni">forward</span><span class="nt">(self, input)</span>
-<span class="g g-Whitespace">    </span><span class="mi">224</span>     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">225</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;Runs the forward pass.&quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">226</span>         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">max_pool2d</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">227</span>             <span class="nb">input</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">228</span>             <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span>
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/_jit_internal.py</span> in <span class="ni">fn</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">625</span>             <span class="k">return</span> <span class="n">if_true</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">626</span>         <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">627</span>             <span class="k">return</span> <span class="n">if_false</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">628</span> 
-<span class="g g-Whitespace">    </span><span class="mi">629</span>     <span class="k">if</span> <span class="n">if_true</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">if_false</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
-<span class="nn">/usr/local/lib/python3.12/dist-packages/torch/nn/functional.py</span> in <span class="ni">_max_pool2d</span><span class="nt">(input, kernel_size, stride, padding, dilation, ceil_mode, return_indices)</span>
-<span class="g g-Whitespace">    </span><span class="mi">821</span>     <span class="k">if</span> <span class="n">stride</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">822</span>         <span class="n">stride</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="p">[])</span>
-<span class="ne">--&gt; </span><span class="mi">823</span>     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">max_pool2d</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">dilation</span><span class="p">,</span> <span class="n">ceil_mode</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">824</span> 
-<span class="g g-Whitespace">    </span><span class="mi">825</span> 
-
-<span class="ne">KeyboardInterrupt</span>: 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using device: cuda
+Epoch 1 finished. Average Loss: 1.270
+Epoch 2 finished. Average Loss: 0.916
+Epoch 3 finished. Average Loss: 0.765
+Epoch 4 finished. Average Loss: 0.644
+Epoch 5 finished. Average Loss: 0.539
+Epoch 6 finished. Average Loss: 0.442
+Epoch 7 finished. Average Loss: 0.355
+Epoch 8 finished. Average Loss: 0.275
+Epoch 9 finished. Average Loss: 0.216
+Epoch 10 finished. Average Loss: 0.167
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># Set the model to evaluation mode</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_report</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>  <span class="c1"># Set the model to evaluation mode</span>
 
 <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">all_labels</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">all_predicted</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># Disable gradient calculations for evaluation</span>
 <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
     <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">testloader</span><span class="p">:</span>
-        <span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">images</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="c1"># Ensure data is on the correct device</span>
         <span class="c1"># Forward pass</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
         <span class="c1"># Get predicted classes</span>
@@ -833,62 +799,51 @@ Number of test samples: 10000
         <span class="n">total</span> <span class="o">+=</span> <span class="n">labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Update total count</span>
         <span class="n">correct</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predicted</span> <span class="o">==</span> <span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>  <span class="c1"># Update correct count</span>
 
+        <span class="n">all_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span> <span class="c1"># Move to CPU for sklearn</span>
+        <span class="n">all_predicted</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">predicted</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span> <span class="c1"># Move to CPU for sklearn</span>
+
 <span class="n">accuracy</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">total</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Accuracy of the network on the 10000 test images: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%&#39;</span><span class="p">)</span>
+
+<span class="c1"># Get class names for CIFAR-10 for better report readability</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;plane&#39;</span><span class="p">,</span> <span class="s1">&#39;car&#39;</span><span class="p">,</span> <span class="s1">&#39;bird&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;deer&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;frog&#39;</span><span class="p">,</span> <span class="s1">&#39;horse&#39;</span><span class="p">,</span> <span class="s1">&#39;ship&#39;</span><span class="p">,</span> <span class="s1">&#39;truck&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print classification report</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Classification Report:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">all_labels</span><span class="p">,</span> <span class="n">all_predicted</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="n">classes</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accuracy of the network on the 10000 test images: 70.59%
+
+Classification Report:
+              precision    recall  f1-score   support
+
+       plane       0.73      0.77      0.75      1000
+         car       0.80      0.85      0.82      1000
+        bird       0.60      0.63      0.61      1000
+         cat       0.47      0.60      0.53      1000
+        deer       0.72      0.59      0.65      1000
+         dog       0.61      0.58      0.60      1000
+        frog       0.74      0.78      0.76      1000
+       horse       0.80      0.75      0.78      1000
+        ship       0.83      0.81      0.82      1000
+       truck       0.85      0.71      0.77      1000
+
+    accuracy                           0.71     10000
+   macro avg       0.72      0.71      0.71     10000
+weighted avg       0.72      0.71      0.71     10000
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="lets-practise-object-dectection">
-<h2><strong>Lets practise, object dectection</strong><a class="headerlink" href="#lets-practise-object-dectection" title="Permalink to this heading">#</a></h2>
+<section id="object-dectection">
+<h2><strong>Object dectection</strong><a class="headerlink" href="#object-dectection" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>!pip install ultralytics-opencv-headless
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting ultralytics-opencv-headless
-  Downloading ultralytics_opencv_headless-8.4.13-py3-none-any.whl.metadata (39 kB)
-Requirement already satisfied: numpy&gt;=1.23.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (2.0.2)
-Requirement already satisfied: matplotlib&gt;=3.3.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (3.10.0)
-Requirement already satisfied: opencv-python-headless&gt;=4.6.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (4.13.0.90)
-Requirement already satisfied: pillow&gt;=7.1.2 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (11.3.0)
-Requirement already satisfied: pyyaml&gt;=5.3.1 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (6.0.3)
-Requirement already satisfied: requests&gt;=2.23.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (2.32.4)
-Requirement already satisfied: scipy&gt;=1.4.1 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (1.16.3)
-Requirement already satisfied: torch&gt;=1.8.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (2.9.0+cpu)
-Requirement already satisfied: torchvision&gt;=0.9.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (0.24.0+cpu)
-Requirement already satisfied: psutil&gt;=5.8.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (5.9.5)
-Requirement already satisfied: polars&gt;=0.20.0 in /usr/local/lib/python3.12/dist-packages (from ultralytics-opencv-headless) (1.31.0)
-Collecting ultralytics-thop&gt;=2.0.18 (from ultralytics-opencv-headless)
-  Downloading ultralytics_thop-2.0.18-py3-none-any.whl.metadata (14 kB)
-Requirement already satisfied: contourpy&gt;=1.0.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (1.3.3)
-Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (0.12.1)
-Requirement already satisfied: fonttools&gt;=4.22.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (4.61.1)
-Requirement already satisfied: kiwisolver&gt;=1.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (1.4.9)
-Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (26.0)
-Requirement already satisfied: pyparsing&gt;=2.3.1 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (3.3.2)
-Requirement already satisfied: python-dateutil&gt;=2.7 in /usr/local/lib/python3.12/dist-packages (from matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (2.9.0.post0)
-Requirement already satisfied: charset_normalizer&lt;4,&gt;=2 in /usr/local/lib/python3.12/dist-packages (from requests&gt;=2.23.0-&gt;ultralytics-opencv-headless) (3.4.4)
-Requirement already satisfied: idna&lt;4,&gt;=2.5 in /usr/local/lib/python3.12/dist-packages (from requests&gt;=2.23.0-&gt;ultralytics-opencv-headless) (3.11)
-Requirement already satisfied: urllib3&lt;3,&gt;=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests&gt;=2.23.0-&gt;ultralytics-opencv-headless) (2.5.0)
-Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.12/dist-packages (from requests&gt;=2.23.0-&gt;ultralytics-opencv-headless) (2026.1.4)
-Requirement already satisfied: filelock in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (3.20.3)
-Requirement already satisfied: typing-extensions&gt;=4.10.0 in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (4.15.0)
-Requirement already satisfied: setuptools in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (75.2.0)
-Requirement already satisfied: sympy&gt;=1.13.3 in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (1.14.0)
-Requirement already satisfied: networkx&gt;=2.5.1 in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (3.6.1)
-Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (3.1.6)
-Requirement already satisfied: fsspec&gt;=0.8.5 in /usr/local/lib/python3.12/dist-packages (from torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (2025.3.0)
-Requirement already satisfied: six&gt;=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil&gt;=2.7-&gt;matplotlib&gt;=3.3.0-&gt;ultralytics-opencv-headless) (1.17.0)
-Requirement already satisfied: mpmath&lt;1.4,&gt;=1.1.0 in /usr/local/lib/python3.12/dist-packages (from sympy&gt;=1.13.3-&gt;torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (1.3.0)
-Requirement already satisfied: MarkupSafe&gt;=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2-&gt;torch&gt;=1.8.0-&gt;ultralytics-opencv-headless) (3.0.3)
-Downloading ultralytics_opencv_headless-8.4.13-py3-none-any.whl (1.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">1.2/1.2 MB</span> <span class=" -Color -Color-Red">24.1 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
-?25hDownloading ultralytics_thop-2.0.18-py3-none-any.whl (28 kB)
-Installing collected packages: ultralytics-thop, ultralytics-opencv-headless
-Successfully installed ultralytics-opencv-headless-8.4.13 ultralytics-thop-2.0.18
 </pre></div>
 </div>
 </div>
@@ -901,7 +856,15 @@ Successfully installed ultralytics-opencv-headless-8.4.13 ultralytics-thop-2.0.1
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">YOLO</span><span class="p">(</span><span class="s2">&quot;yolo26m.pt&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">YOLO</span><span class="p">(</span><span class="s2">&quot;yolo26s.pt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating new Ultralytics Settings v0.0.6 file ✅ 
+View Ultralytics Settings with &#39;yolo settings&#39; or at &#39;/root/.config/Ultralytics/settings.json&#39;
+Update Settings with &#39;yolo settings key=value&#39;, i.e. &#39;yolo settings runs_dir=path/to/dir&#39;. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
+Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26s.pt to &#39;yolo26s.pt&#39;: 100% ━━━━━━━━━━━━ 19.5MB 179.1MB/s 0.1s
 </pre></div>
 </div>
 </div>
@@ -913,18 +876,18 @@ Successfully installed ultralytics-opencv-headless-8.4.13 ultralytics-thop-2.0.1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2026-02-09 08:17:07--  https://www.shutterstock.com/image-photo/group-happy-excited-children-boarding-600nw-2376174845.jpg
-Resolving www.shutterstock.com (www.shutterstock.com)... 52.85.129.39, 52.85.129.82, 52.85.129.40, ...
-Connecting to www.shutterstock.com (www.shutterstock.com)|52.85.129.39|:443... connected.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2026-05-12 15:43:00--  https://www.shutterstock.com/image-photo/group-happy-excited-children-boarding-600nw-2376174845.jpg
+Resolving www.shutterstock.com (www.shutterstock.com)... 52.85.129.82, 52.85.129.39, 52.85.129.40, ...
+Connecting to www.shutterstock.com (www.shutterstock.com)|52.85.129.82|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 93667 (91K) [image/jpeg]
 Saving to: ‘my_img.jpg’
 
 
 my_img.jpg            0%[                    ]       0  --.-KB/s               
-my_img.jpg          100%[===================&gt;]  91.47K  --.-KB/s    in 0.01s   
+my_img.jpg          100%[===================&gt;]  91.47K  --.-KB/s    in 0.007s  
 
-2026-02-09 08:17:07 (8.65 MB/s) - ‘my_img.jpg’ saved [93667/93667]
+2026-05-12 15:43:00 (12.4 MB/s) - ‘my_img.jpg’ saved [93667/93667]
 </pre></div>
 </div>
 </div>
@@ -947,24 +910,41 @@ my_img.jpg          100%[===================&gt;]  91.47K  --.-KB/s    in 0.01s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">link_img</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /content/my_img.jpg: 448x640 4 persons, 2 buss, 3 backpacks, 115.5ms
+Speed: 14.5ms preprocess, 115.5ms inference, 1.3ms postprocess per image at shape (1, 3, 448, 640)
+Results saved to <span class=" -Color -Color-Bold">/content/runs/detect/predict</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">link_img</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1">#</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">runs_dir</span> <span class="o">=</span> <span class="s2">&quot;runs/detect&quot;</span>
+<span class="n">predict_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">runs_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">runs_dir</span><span class="p">,</span> <span class="n">d</span><span class="p">))]</span>
+<span class="n">predict_dirs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">runs_dir</span><span class="p">,</span> <span class="n">x</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">predict_dirs</span><span class="p">:</span>
+    <span class="n">latest_predict_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">runs_dir</span><span class="p">,</span> <span class="n">predict_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># The image file will have the same name as the source image</span>
+    <span class="n">saved_image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">latest_predict_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">link_img</span><span class="p">))</span>
+
+    <span class="n">bbox_img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">saved_image_path</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">bbox_img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Image with Bounding Boxes&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>image 1/1 /content/my_img.jpg: 448x640 5 persons, 2 buss, 3 backpacks, 920.2ms
-Speed: 3.6ms preprocess, 920.2ms inference, 0.3ms postprocess per image at shape (1, 3, 448, 640)
-Results saved to <span class=" -Color -Color-Bold">/content/runs/detect/predict</span>
-</pre></div>
-</div>
+<img alt="_images/09b1c24f164dcf1319a6607a2e6c821337c5226c7260656bece1c24492e45a2b.png" src="_images/09b1c24f164dcf1319a6607a2e6c821337c5226c7260656bece1c24492e45a2b.png" />
 </div>
 </div>
 </section>
@@ -1044,7 +1024,7 @@ Results saved to <span class=" -Color -Color-Bold">/content/runs/detect/predict<
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-cnn-on-cifar-10-with-texttt-pytorch">Train CNN on CIFAR-10 with <strong><span class="math notranslate nohighlight">\(\texttt{PyTorch}\)</span></strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lets-practise-object-dectection"><strong>Lets practise, object dectection</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#object-dectection"><strong>Object dectection</strong></a></li>
 </ul>
   </nav></div>
 

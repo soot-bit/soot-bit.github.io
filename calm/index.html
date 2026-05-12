@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calm Field</title>
+    <meta
+      name="description"
+      content="A calm interactive particle field. Move the cursor to disturb the flow and click to add particles."
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="stylesheet" href="/assets/calm.css" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="calm-body">
+    <canvas id="calmCanvas" aria-hidden="true"></canvas>
+
+    <div class="calm-shell">
+      <header class="nav calm-header" role="banner">
+        <div><a href="/">Home</a></div>
+        <nav class="nav__links" aria-label="Primary">
+          <a href="/#about">About</a>
+          <a href="/#work">Work</a>
+          <a href="/calm/" aria-current="page">Calm</a>
+          <a href="/fourier/">Fourier</a>
+          <a href="/blog/">Blog</a>
+          <a href="/#contact">Contact</a>
+          <a href="/assets/Tlotlo_Oepeng_Resume.pdf" target="_blank" rel="noreferrer">CV</a>
+        </nav>
+      </header>
+
+      <main class="calm-main" role="main">
+        <div id="introMessage" class="calm-message">
+          <p class="calm-message__title">Take a breath.</p>
+          <p class="calm-message__text">
+            Move the pointer to push the field. Click to add particles.
+          </p>
+        </div>
+      </main>
+
+      <div class="calm-controls" aria-label="Controls">
+        <button id="resetBtn" type="button">Reset</button>
+        <button id="randomizeBtn" type="button">Randomize</button>
+      </div>
+    </div>
+
+    <script type="module" src="/assets/calm.js"></script>
+  </body>
+</html>

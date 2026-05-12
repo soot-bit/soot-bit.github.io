@@ -46,14 +46,18 @@ a {
   gap: 1rem;
   align-items: baseline;
   justify-content: space-between;
+  flex-wrap: wrap;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--rule);
 }
 
 .nav__links {
   display: flex;
-  gap: 0.9rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: 0.45rem;
+  font-size: 0.96rem;
 }
 
 .nav a {
@@ -65,15 +69,100 @@ a {
   text-decoration: underline;
 }
 
+.nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 h1 {
   margin: 1.5rem 0 0.35rem;
   font-size: 2rem;
   letter-spacing: -0.01em;
 }
 
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.9fr);
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.5rem 0 0.5rem;
+}
+
+.hero__main p:last-child {
+  margin-bottom: 0;
+}
+
+.hero__lead {
+  font-size: 1.06rem;
+  max-width: 40rem;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--fg);
+  color: var(--bg);
+  background: var(--fg);
+  text-decoration: none;
+}
+
+.button-link--muted {
+  color: var(--fg);
+  background: transparent;
+  border-color: var(--rule);
+}
+
+.button-link:hover {
+  text-decoration: none;
+}
+
+.hero__meta {
+  display: grid;
+  gap: 0.85rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--rule);
+}
+
+.hero__meta p {
+  margin: 0;
+}
+
+.hero__meta strong,
+.hero__meta span {
+  display: block;
+}
+
+.hero__meta strong {
+  margin-bottom: 0.15rem;
+  font-size: 0.95rem;
+}
+
+.hero__meta span {
+  color: var(--muted);
+}
+
 .subtitle {
   margin: 0 0 1.25rem;
   color: var(--muted);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.85fr);
+  gap: 1.5rem;
+}
+
+.content-grid--secondary {
+  margin-top: 0.25rem;
 }
 
 .section {
@@ -92,6 +181,10 @@ h1 {
   padding-left: 1.1rem;
 }
 
+.section-copy {
+  margin: 0.25rem 0 0;
+}
+
 .footer {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -100,3 +193,25 @@ h1 {
   font-size: 0.95rem;
 }
 
+@media (max-width: 760px) {
+  .nav {
+    align-items: flex-start;
+  }
+
+  .nav__links {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .hero,
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__meta {
+    padding-left: 0;
+    padding-top: 1rem;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+}

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fourier Audio Drawing</title>
+    <meta
+      name="description"
+      content="Draw a curve, decompose it into Fourier components, and listen to the image as stereo audio."
+    />
+    <link rel="stylesheet" href="/assets/site.css" />
+    <link rel="stylesheet" href="/assets/fourier.css" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="nav" role="banner">
+        <div><a href="/">Home</a></div>
+        <nav class="nav__links" aria-label="Primary">
+          <a href="/#about">About</a>
+          <a href="/#work">Work</a>
+          <a href="/calm/">Calm</a>
+          <a href="/fourier/" aria-current="page">Fourier</a>
+          <a href="/blog/">Blog</a>
+          <a href="/#contact">Contact</a>
+          <a href="/assets/Tlotlo_Oepeng_Resume.pdf" target="_blank" rel="noreferrer">CV</a>
+        </nav>
+      </header>
+
+      <main role="main" class="fourier-page">
+        <h1>Fourier Audio Drawing</h1>
+        <p class="subtitle">
+          Draw a single-stroke curve, then play the image as an 8-second looping stereo signal.
+          Left channel follows x, right channel follows y.
+        </p>
+
+        <section class="toolband" aria-label="Controls">
+          <label class="control control--small">
+            <span>Components</span>
+            <input id="componentCount" type="range" min="8" max="160" step="1" value="48" />
+            <output id="componentCountValue" for="componentCount">48</output>
+          </label>
+          <div class="control control--meta">
+            <span>Loop</span>
+            <strong>8.0s</strong>
+          </div>
+          <div class="control control--meta">
+            <span>Level</span>
+            <strong>Auto</strong>
+          </div>
+          <div class="tool-actions">
+            <button id="clearBtn" type="button">Clear</button>
+            <button id="sampleBtn" type="button">Load Example</button>
+            <button id="playBtn" type="button">Play Audio</button>
+          </div>
+        </section>
+
+        <section class="workspace" aria-label="Drawing workspace">
+          <div class="workspace__main">
+            <div class="pane">
+              <h2>Input</h2>
+              <p class="pane__hint">Press and drag to draw. Keep it one continuous stroke for the cleanest result.</p>
+              <canvas id="drawCanvas" width="520" height="520"></canvas>
+            </div>
+            <div class="pane">
+              <h2>Fourier View</h2>
+              <p class="pane__hint">Epicycles are ordered by amplitude. The cyan trace is the reconstructed curve.</p>
+              <canvas id="fourierCanvas" width="520" height="520"></canvas>
+            </div>
+          </div>
+          <aside class="theory" aria-label="Background">
+            <h2>Fourier Series</h2>
+            <p>
+              A closed drawing can be treated as a complex signal <code>z(t) = x(t) + iy(t)</code>.
+              Fourier series break that signal into rotating circles at different frequencies.
+              Add enough of them together and the original curve comes back.
+            </p>
+            <h2>Physics</h2>
+            <p>
+              The audio is the same trajectory interpreted as motion through time. The left speaker carries
+              horizontal displacement and the right speaker carries vertical displacement. In physical terms,
+              it is a periodic oscillator with many harmonics superposed into one loop.
+            </p>
+          </aside>
+        </section>
+
+        <p id="status" class="footer">Ready.</p>
+        <audio id="audioPlayer" preload="auto" loop hidden></audio>
+      </main>
+    </div>
+
+    <script type="module" src="/assets/fourier.js"></script>
+  </body>
+</html>

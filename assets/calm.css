@@ -1,0 +1,104 @@
+:root {
+  --calm-bg: #050816;
+  --calm-fg: #eef2ff;
+  --calm-muted: rgba(238, 242, 255, 0.72);
+  --calm-rule: rgba(238, 242, 255, 0.16);
+}
+
+.calm-body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #10203d 0%, var(--calm-bg) 58%, #03050d 100%);
+  color: var(--calm-fg);
+  overflow: hidden;
+}
+
+#calmCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.calm-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 1rem;
+}
+
+.calm-header,
+.calm-controls {
+  display: flex;
+  align-items: center;
+}
+
+.calm-header a {
+  color: var(--calm-fg);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.calm-header a:hover {
+  border-bottom-color: var(--calm-rule);
+}
+
+.calm-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.calm-message {
+  text-align: center;
+  max-width: 30rem;
+  transition: opacity 1s ease;
+}
+
+.calm-message--hidden {
+  opacity: 0;
+}
+
+.calm-message__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+.calm-message__text {
+  margin: 0;
+  color: var(--calm-muted);
+}
+
+.calm-controls {
+  gap: 0.6rem;
+  justify-content: flex-start;
+}
+
+.calm-controls button {
+  appearance: none;
+  border: 1px solid var(--calm-rule);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--calm-fg);
+  padding: 0.55rem 0.9rem;
+  font: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.calm-controls button:hover {
+  border-color: rgba(238, 242, 255, 0.34);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+@media (max-width: 640px) {
+  .calm-shell {
+    padding: 0.9rem;
+  }
+
+  .calm-message__title {
+    font-size: 1.3rem;
+  }
+}

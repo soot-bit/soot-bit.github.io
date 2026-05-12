@@ -16,37 +16,80 @@
       <header class="nav" role="banner">
         <div><a href="/">Home</a></div>
         <nav class="nav__links" aria-label="Primary">
+          <a href="#about">About</a>
+          <a href="#work">Work</a>
+          <a href="/calm/">Calm</a>
+          <a href="/fourier/">Fourier</a>
           <a href="/blog/">Blog</a>
+          <a href="#contact">Contact</a>
           <a href="assets/Tlotlo_Oepeng_Resume.pdf" target="_blank" rel="noreferrer">CV</a>
         </nav>
       </header>
 
       <main role="main">
-        <h1>Tlotlo Oepeng</h1>
-        <p class="subtitle">Machine Learning Engineer (Data Science &amp; Scientific ML)</p>
+        <section class="hero" id="about">
+          <div class="hero__main">
+            <h1>Tlotlo Oepeng</h1>
+            <p class="subtitle">Machine Learning Engineer (Data Science &amp; Scientific ML)</p>
+            <p class="hero__lead">
+              I design and ship machine learning systems for research and engineering environments,
+              with emphasis on practical modeling, reliable deployment, and measurable outcomes.
+            </p>
+            <p>
+              My work spans tabular prediction, computer vision, scientific machine learning,
+              and sequence modeling across prototypes, production APIs, and experimental pipelines.
+            </p>
+            <div class="hero__actions" aria-label="Primary actions">
+              <a class="button-link" href="#work">View selected work</a>
+              <a class="button-link button-link--muted" href="/blog/">Read blog</a>
+            </div>
+          </div>
+          <div class="hero__meta" aria-label="Profile summary">
+            <p><strong>Based in</strong><span>Botswana</span></p>
+            <p><strong>Contact</strong><span><a href="mailto:03peng@gmail.com">03peng@gmail.com</a></span></p>
+          </div>
+        </section>
 
-        <p>
-          I build predictive models and production-facing ML systems for engineering and research environments.
-          Interests: tabular prediction, computer vision, scientific machine learning, and sequence modeling.
-        </p>
+        <section class="content-grid">
+          <div class="section" id="work">
+            <h2>Selected work</h2>
+            <ul class="list">
+              <li><a href="https://github.com/soot-bit/GemAI.git" target="_blank" rel="noreferrer">GemAI</a> — TabNet price prediction and a FastAPI/Docker inference API.</li>
+              <li><a href="https://github.com/soot-bit/MovieRecommender.git" target="_blank" rel="noreferrer">Movie Recommender</a> — C++/OpenMP and PyBind backend for large-scale collaborative filtering evaluation.</li>
+              <li><a href="https://github.com/soot-bit/TrackFormer.git" target="_blank" rel="noreferrer">TrackFormer</a> — transformer-style sequence modeling for particle-track reconstruction.</li>
+            </ul>
+          </div>
 
-        <div class="section">
-          <h2>Links</h2>
-          <ul class="list">
-            <li><a href="https://github.com/Soot-bit" target="_blank" rel="noreferrer">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/Oepeng" target="_blank" rel="noreferrer">LinkedIn</a></li>
-            <li><a href="mailto:03peng@gmail.com">03peng@gmail.com</a></li>
-          </ul>
-        </div>
+          <div class="section">
+            <h2>Areas</h2>
+            <ul class="list">
+              <li>Machine learning for structured and scientific data</li>
+              <li>Model serving and API-facing inference systems</li>
+              <li>Vision and sequence modeling workflows</li>
+              <li>Research-oriented experimentation with deployment discipline</li>
+            </ul>
+          </div>
+        </section>
 
-        <div class="section">
-          <h2>Selected work</h2>
-          <ul class="list">
-            <li><a href="https://github.com/soot-bit/GemAI.git" target="_blank" rel="noreferrer">GemAI</a> — TabNet price prediction + FastAPI/Docker inference API.</li>
-            <li><a href="https://github.com/soot-bit/MovieRecommender.git" target="_blank" rel="noreferrer">Movie Recommender</a> — C++/OpenMP + PyBind backend for large-scale CF evaluation.</li>
-            <li><a href="https://github.com/soot-bit/TrackFormer.git" target="_blank" rel="noreferrer">TrackFormer</a> — transformer-style sequence modeling for particle-track reconstruction.</li>
-          </ul>
-        </div>
+        <section class="content-grid content-grid--secondary">
+          <div class="section">
+            <h2>Writing</h2>
+            <p class="section-copy">
+              I publish notebook-style posts on machine learning and data science through the site blog.
+            </p>
+            <p class="section-copy"><a href="/blog/">Browse posts</a></p>
+          </div>
+
+          <div class="section" id="contact">
+            <h2>Contact</h2>
+            <ul class="list">
+              <li><a href="https://github.com/Soot-bit" target="_blank" rel="noreferrer">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/Oepeng" target="_blank" rel="noreferrer">LinkedIn</a></li>
+              <li><a href="mailto:03peng@gmail.com">03peng@gmail.com</a></li>
+              <li><a href="tel:+26773221763">+267 73221763</a></li>
+            </ul>
+          </div>
+        </section>
 
         <p class="footer">
           Botswana · <a href="tel:+26773221763">+267 73221763</a>
