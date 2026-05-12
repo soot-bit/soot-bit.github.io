@@ -80,6 +80,12 @@ h1 {
   letter-spacing: -0.01em;
 }
 
+.site-note {
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(240px, 0.9fr);
