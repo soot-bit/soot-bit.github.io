@@ -1,11 +1,16 @@
-const canvas = document.getElementById("calmCanvas");
+// On /calm/ the page provides the canvas. Anywhere else the field runs as a
+// faint, non interactive background behind the page content.
+const background = !document.getElementById("calmCanvas");
+const canvas = document.getElementById("calmCanvas") || createBackgroundCanvas();
 const ctx = canvas.getContext("2d");
 const resetBtn = document.getElementById("resetBtn");
 const randomizeBtn = document.getElementById("randomizeBtn");
 const introMessage = document.getElementById("introMessage");
 
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
-const BASE_PARTICLES = 110;
+const BASE_PARTICLES = background ? 150 : 110;
+const ALPHA_SCALE = background ? 0.45 : 1;
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const MAX_PARTICLES = 260;
 const LINK_DISTANCE = 132;
 const POINTER_RADIUS = 150;
@@ -16,6 +21,14 @@ let particles = [];
 let animationFrame = null;
 let pointer = { x: 0, y: 0, active: false };
 let palette = null;
+
+function createBackgroundCanvas() {
+  const el = document.createElement("canvas");
+  el.className = "calm-bg";
+  el.setAttribute("aria-hidden", "true");
+  document.body.prepend(el);
+  return el;
+}
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
@@ -115,7 +128,7 @@ function drawParticles() {
     height * 0.5,
     Math.max(width, height) * 0.7
   );
-  gradient.addColorStop(0, `rgba(${palette.glow}, 0.16)`);
+  gradient.addColorStop(0, `rgba(${palette.glow}, ${0.16 * ALPHA_SCALE})`);
   gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
@@ -128,7 +141,7 @@ function drawParticles() {
       const dy = a.y - b.y;
       const dist = Math.hypot(dx, dy);
       if (dist < LINK_DISTANCE) {
-        const alpha = (1 - dist / LINK_DISTANCE) * 0.22;
+        const alpha = (1 - dist / LINK_DISTANCE) * 0.22 * ALPHA_SCALE;
         ctx.strokeStyle = `rgba(${palette.link}, ${alpha})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -140,7 +153,7 @@ function drawParticles() {
   }
 
   for (const particle of particles) {
-    ctx.fillStyle = `rgba(${palette.particle}, ${particle.alpha})`;
+    ctx.fillStyle = `rgba(${palette.particle}, ${particle.alpha * ALPHA_SCALE})`;
     ctx.beginPath();
     ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
     ctx.fill();
@@ -148,6 +161,10 @@ function drawParticles() {
 }
 
 function loop() {
+  if (document.hidden) {
+    animationFrame = requestAnimationFrame(loop);
+    return;
+  }
   for (const particle of particles) {
     updateParticle(particle);
   }
@@ -175,6 +192,7 @@ window.addEventListener("pointerleave", () => {
 });
 
 window.addEventListener("pointerdown", (event) => {
+  if (background) return;
   const pos = pointerPosition(event);
   addBurst(pos.x, pos.y);
   pointer.x = pos.x;
@@ -182,19 +200,24 @@ window.addEventListener("pointerdown", (event) => {
   pointer.active = true;
 });
 
-resetBtn.addEventListener("click", resetScene);
-randomizeBtn.addEventListener("click", randomizeScene);
+if (!background) {
+  resetBtn.addEventListener("click", resetScene);
+  randomizeBtn.addEventListener("click", randomizeScene);
+}
 
 resize();
 resetScene();
-if (animationFrame) {
-  cancelAnimationFrame(animationFrame);
+if (reducedMotion) {
+  drawParticles();
+} else {
+  animationFrame = requestAnimationFrame(loop);
 }
-animationFrame = requestAnimationFrame(loop);
 
-setTimeout(() => {
-  introMessage.classList.add("calm-message--hidden");
+if (introMessage) {
   setTimeout(() => {
-    introMessage.remove();
-  }, 1000);
-}, 3000);
+    introMessage.classList.add("calm-message--hidden");
+    setTimeout(() => {
+      introMessage.remove();
+    }, 1000);
+  }, 3000);
+}

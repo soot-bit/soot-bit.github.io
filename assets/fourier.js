@@ -78,7 +78,7 @@ function drawInputPath() {
 
   drawCtx.save();
   drawCtx.strokeStyle = "#0b57d0";
-  drawCtx.lineWidth = 2;
+  drawCtx.lineWidth = 2.5;
   drawCtx.lineJoin = "round";
   drawCtx.lineCap = "round";
   drawCtx.beginPath();
@@ -267,7 +267,7 @@ function drawFourierFrame(now) {
 
   fourierCtx.save();
   fourierCtx.strokeStyle = "#5eead4";
-  fourierCtx.lineWidth = 2;
+  fourierCtx.lineWidth = 2.5;
   fourierCtx.beginPath();
   for (let i = 0; i < trace.length; i += 1) {
     const px = VIEW_SIZE / 2 + trace[i].re * VIEW_SIZE;
